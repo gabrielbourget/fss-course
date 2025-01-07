@@ -1,4 +1,5 @@
 import osUtils from "os-utils";
+import os from "os";
 import fs from "fs";
 
 const POLLING_INTERVAL = 1000;
@@ -32,4 +33,12 @@ const getStorageData = () => {
     total: Math.floor(total / 1000000000),
     usage: 1 - (free / total)
   };
+};
+
+export const getStaticData = () => {
+  const totalStorage = getStorageData().total;
+  const CPUModel = os.cpus()[0].model;
+  const totalMemoryGB = Math.floor(osUtils.totalmem() / 1024);
+
+  return { totalStorage, CPUModel, totalMemoryGB };
 };
