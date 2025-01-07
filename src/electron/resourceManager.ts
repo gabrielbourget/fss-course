@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import osUtils from "os-utils";
 import os from "os";
 import fs from "fs";
 
-const POLLING_INTERVAL = 1000;
+const POLLING_INTERVAL = 500;
 
 export const pollResources = () => {
   setInterval(async () => {
@@ -10,9 +11,9 @@ export const pollResources = () => {
     const RAMUsage = getRAMUsage();
     const storageData = getStorageData();
 
-    console.log(`CPU usage -> ${CPUUsage}%`);
-    console.log(`RAM usage -> ${RAMUsage}%`);
-    console.log(`Storage usage -> ${storageData.usage}%`);
+    // console.log(`CPU usage -> ${CPUUsage}%`);
+    // console.log(`RAM usage -> ${RAMUsage}%`);
+    // console.log(`Storage usage -> ${storageData.usage}%`);
   }, POLLING_INTERVAL);
 };
 
