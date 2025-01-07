@@ -13,5 +13,8 @@ app.on("ready", () => {
     }
   });
 
-  mainWindow.loadFile(path.resolve(__dirname, "..", "..", "dist-react", "index.html"));
+  console.log(`__dirname: ${__dirname}`);
+  console.log(`path created -> ${path.join(__dirname, "..", "dist-react", "index.html")}`);
+
+  mainWindow.loadFile(path.join(__dirname, "..", "dist-react", "index.html"));
 });
