@@ -21,5 +21,5 @@ app.on("ready", () => {
     mainWindow.loadFile(path.join(__dirname, "..", "dist-react", "index.html"));
   }
 
-  pollResources();
+  pollResources(mainWindow);
 });
