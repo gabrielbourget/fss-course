@@ -1,3 +1,5 @@
+// import type { Electron } from "electron";
+
 type TStatistics = {
   totalStorage: number,
   CPUUsage: number,
@@ -11,6 +13,8 @@ type TStaticData = {
 }
 
 interface Window {
-  subscribeStatistics: (callback: (stats: TStatistics) => void) => void,
-  getStaticData: () => Promise<TStaticData>
+  electron: {
+    subscribeStatistics: (callback: (stats: TStatistics) => void) => void,
+    getStaticData: () => Promise<TStaticData>,
+  }
 }
