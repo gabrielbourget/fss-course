@@ -1,9 +1,14 @@
-import { ipcMain, type WebContents } from "electron";
+import { ipcMain, WebFrameMain, type WebContents } from "electron";
+import { getUIPath } from "./pathResolver.js";
+import { pathToFileURL } from "url";
 
 export const isDev = () => process.env.NODE_ENV === "development";
 
 export const ipcMainHandle = <Key extends keyof TEventPayloadMapping>(key: Key, handler: () => TEventPayloadMapping[Key]) => {
-  ipcMain.handle(key, () => handler());
+  ipcMain.handle(key, (event) => {
+    validateEventFrame(event.senderFrame!);
+    return handler();
+  });
 };
 
 export const ipcWebContentsSend = <Key extends keyof TEventPayloadMapping>(
@@ -12,4 +17,14 @@ export const ipcWebContentsSend = <Key extends keyof TEventPayloadMapping>(
   payload: TEventPayloadMapping[Key]
 ) => {
   webContents.send(key, payload);
+};
+
+export const validateEventFrame = (frame: WebFrameMain) => {
+  if (isDev() && new URL(frame.url).host === "localhost:5123") {
+    return;
+  }
+
+  if (frame.url !== pathToFileURL(getUIPath()).toString()) {
+    throw new Error("Potentially malicious event detected");
+  }
 };

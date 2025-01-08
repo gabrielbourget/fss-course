@@ -19,7 +19,9 @@ type TEventPayloadMapping = {
 
 interface Window {
   electron: {
-    subscribeStatistics: (callback: (stats: TStatistics) => void) => void,
+    subscribeStatistics: (callback: (stats: TStatistics) => void) => TUnsubscribeFn,
     getStaticData: () => Promise<TStaticData>,
   }
 }
+
+type TUnsubscribeFn = () => void;
