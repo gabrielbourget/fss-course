@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import osUtils from "os-utils";
 import os from "os";
 import fs from "fs";
