@@ -1,17 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
+import { useStatistics } from './hooks/useStatistics';
 
 function App() {
   const [count, setCount] = useState(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const statistics = useStatistics(10);
 
-  useEffect(() => {
-    const unsubscribeToStats = window.electron.subscribeStatistics((stats) => console.log(stats));
-
-    return () => {
-      unsubscribeToStats();
-    }
-  }, [])
+  // console.log(`Statistics -> ${statistics.length}`);
 
   return (
     <>
