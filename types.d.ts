@@ -12,6 +12,11 @@ type TStaticData = {
   totalMemoryGB: number,
 }
 
+type TEventPayloadMapping = {
+  statistics: TStatistics,
+  getStaticData: TStaticData,
+}
+
 interface Window {
   electron: {
     subscribeStatistics: (callback: (stats: TStatistics) => void) => void,
