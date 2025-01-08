@@ -9,3 +9,8 @@ type TStaticData = {
   CPUModel: string,
   totalMemoryGB: number,
 }
+
+interface Window {
+  subscribeStatistics: (callback: (stats: TStatistics) => void) => void,
+  getStaticData: () => Promise<TStaticData>
+}
