@@ -1,18 +1,22 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
 import { useStatistics } from './hooks/useStatistics';
+import Chart from './components/Chart';
 
 function App() {
   const [count, setCount] = useState(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const statistics = useStatistics(10);
+  const cpuUsages = useMemo(() => statistics.map((stat) => stat.CPUUsage), [statistics]);
 
   // console.log(`Statistics -> ${statistics.length}`);
 
   return (
     <>
       <div>
+        <div style={{ height: 120 }}>
+          <Chart data={cpuUsages} fill="#fff" stroke="#fff" maxDataPoints={10} />
+        </div>
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
@@ -31,6 +35,6 @@ function App() {
       </p>
     </>
   )
-}
+};
 
-export default App
+export default App;
