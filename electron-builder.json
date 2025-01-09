@@ -1,8 +1,8 @@
 {
   "appId": "com.gb.electronjs-learning",
   "files": ["dist-electron", "dist-react"],
-  "extraResources": ["dist-electron/preload.cjs"],
-  "icon": "./desktopIcon.png",
+  "extraResources": ["dist-electron/preload.cjs", "src/assets/**"],
+  "icon": "./desktopIconLG.png",
   "mac": {
     "target": "dmg"
   },
