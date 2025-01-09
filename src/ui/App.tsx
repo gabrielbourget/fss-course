@@ -14,7 +14,8 @@ function App() {
   return (
     <>
       <div>
-        <div style={{ height: 120 }}>
+        <div style={{ height: 120, display: "flex", flexDirection: "column", gap: 15 }}>
+          CPU Usage (%)
           <Chart data={cpuUsages} fill="#fff" stroke="#fff" maxDataPoints={10} />
         </div>
         <a href="https://react.dev" target="_blank">
