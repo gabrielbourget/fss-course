@@ -32,7 +32,12 @@ function App() {
   return (
     <>
       <div>
-        <div style={{ height: 120, display: "flex", flexDirection: "column", gap: 15 }}>
+        <header>
+          <button id="close" onClick={() => window.electron.sendFrameAction("CLOSE")} />
+          <button id="minimize" onClick={() => window.electron.sendFrameAction("MINIMIZE")} />
+          <button id="maximize" onClick={() => window.electron.sendFrameAction("MAXIMIZE")} />
+        </header>
+        <div style={{ width: "minContent", height: 120, display: "flex", flexDirection: "column", gap: 15, marginTop: 15 }}>
           {activeViewTitle}
           <Chart data={stats} fill="#fff" stroke="#fff" maxDataPoints={10} />
         </div>

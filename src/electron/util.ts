@@ -4,10 +4,23 @@ import { pathToFileURL } from "url";
 
 export const isDev = () => process.env.NODE_ENV === "development";
 
-export const ipcMainHandle = <Key extends keyof TEventPayloadMapping>(key: Key, handler: () => TEventPayloadMapping[Key]) => {
+export const ipcMainHandle = <Key extends keyof TEventPayloadMapping>(
+  key: Key,
+  handler: () => TEventPayloadMapping[Key]
+) => {
   ipcMain.handle(key, (event) => {
     validateEventFrame(event.senderFrame!);
     return handler();
+  });
+};
+
+export const ipcMainOn = <Key extends keyof TEventPayloadMapping>(
+  key: Key,
+  handler: (payload: TEventPayloadMapping[Key]) => void
+) => {
+  ipcMain.on(key, (event, payload) => {
+    validateEventFrame(event.senderFrame!);
+    return handler(payload);
   });
 };
 
