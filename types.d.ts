@@ -12,14 +12,18 @@ type TStaticData = {
   totalMemoryGB: number,
 }
 
+type TView = "CPU" | "RAM" | "STORAGE";
+
 type TEventPayloadMapping = {
   statistics: TStatistics,
   getStaticData: TStaticData,
+  changeView: TView
 }
 
 interface Window {
   electron: {
     subscribeStatistics: (callback: (stats: TStatistics) => void) => TUnsubscribeFn,
+    subscribeChangeView: (callback: (view: View) => void) => TUnsubscribeFn,
     getStaticData: () => Promise<TStaticData>,
   }
 }

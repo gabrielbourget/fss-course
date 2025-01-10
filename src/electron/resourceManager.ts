@@ -12,7 +12,7 @@ export const pollResources = (mainWindow: BrowserWindow) => {
     const RAMUsage = getRAMUsage();
     const storageData = getStorageData();
 
-    ipcWebContentsSend("statistics", mainWindow.webContents, { CPUUsage, RAMUsage, totalStorage: storageData.usage })
+    ipcWebContentsSend("statistics", mainWindow.webContents, { CPUUsage, RAMUsage, totalStorage: storageData.usage });
     // mainWindow.webContents.send("statistics", { CPUUsage, RAMUsage, storageData: storageData.usage });
     // console.log(`CPU usage -> ${CPUUsage}%`);
     // console.log(`RAM usage -> ${RAMUsage}%`);

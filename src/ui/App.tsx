@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
 import { useStatistics } from './hooks/useStatistics';
@@ -7,16 +7,34 @@ import Chart from './components/Chart';
 function App() {
   const [count, setCount] = useState(0);
   const statistics = useStatistics(10);
+  const [currentView, setCurrentView] = useState<TView>("CPU");
   const cpuUsages = useMemo(() => statistics.map((stat) => stat.CPUUsage), [statistics]);
+  const RAMUsages = useMemo(() => statistics.map((stat) => stat.RAMUsage), [statistics]);
+  const storageUsages = useMemo(() => statistics.map((stat) => stat.totalStorage), [statistics]);
 
-  // console.log(`Statistics -> ${statistics.length}`);
+  const { activeViewTitle, stats } = useMemo(() => {
+    switch (currentView) {
+      case "CPU":
+        return { activeViewTitle: "CPU Usage (%)", stats: cpuUsages };
+      case "RAM":
+        return { activeViewTitle: "RAM USage (%)", stats: RAMUsages };
+      case "STORAGE":
+        return { activeViewTitle: "Storage Usage (%)", stats: storageUsages };
+      default:
+        return { activeViewTitle: "CPU Usage (%)", stats: cpuUsages };;
+    }
+  }, [RAMUsages, cpuUsages, currentView, storageUsages]);
+
+  useEffect(() => {
+    window.electron.subscribeChangeView((view) => setCurrentView(view));
+  }, []);
 
   return (
     <>
       <div>
         <div style={{ height: 120, display: "flex", flexDirection: "column", gap: 15 }}>
-          CPU Usage (%)
-          <Chart data={cpuUsages} fill="#fff" stroke="#fff" maxDataPoints={10} />
+          {activeViewTitle}
+          <Chart data={stats} fill="#fff" stroke="#fff" maxDataPoints={10} />
         </div>
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
