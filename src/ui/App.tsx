@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
-import { useStatistics } from './hooks/useStatistics';
-import Chart from './components/Chart';
+import { type FC, useEffect, useMemo, useState } from "react";
+import "./App.css";
+import { useStatistics } from "./hooks/useStatistics";
+import Chart from "./components/Chart";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const staticData = useStaticData();
   const statistics = useStatistics(10);
   const [currentView, setCurrentView] = useState<TView>("CPU");
   const cpuUsages = useMemo(() => statistics.map((stat) => stat.CPUUsage), [statistics]);
@@ -17,7 +16,7 @@ function App() {
       case "CPU":
         return { activeViewTitle: "CPU Usage (%)", stats: cpuUsages };
       case "RAM":
-        return { activeViewTitle: "RAM USage (%)", stats: RAMUsages };
+        return { activeViewTitle: "RAM Usage (%)", stats: RAMUsages };
       case "STORAGE":
         return { activeViewTitle: "Storage Usage (%)", stats: storageUsages };
       default:
@@ -30,35 +29,87 @@ function App() {
   }, []);
 
   return (
-    <>
-      <div>
-        <header>
-          <button id="close" onClick={() => window.electron.sendFrameAction("CLOSE")} />
-          <button id="minimize" onClick={() => window.electron.sendFrameAction("MINIMIZE")} />
-          <button id="maximize" onClick={() => window.electron.sendFrameAction("MAXIMIZE")} />
-        </header>
-        <div style={{ width: "minContent", height: 120, display: "flex", flexDirection: "column", gap: 15, marginTop: 15 }}>
-          {activeViewTitle}
-          <Chart data={stats} fill="#fff" stroke="#fff" maxDataPoints={10} />
+    <div className="App">
+      <Header />
+      <div className="main">
+        <div>
+          <SelectOption
+            title="CPU %"
+            view="CPU"
+            subTitle={staticData?.CPUModel ?? ""}
+            data={cpuUsages}
+            onCLick={() => setCurrentView("CPU")}
+          />
+          <SelectOption
+            title="RAM"
+            view="RAM"
+            subTitle={(staticData?.totalMemoryGB.toString() ?? "") + "GB"}
+            data={RAMUsages}
+            onCLick={() => setCurrentView("RAM")}
+          />
+          <SelectOption
+            title="STORAGE"
+            view="STORAGE"
+            subTitle={(staticData?.totalStorage.toString() ?? "") + "GB"}
+            data={storageUsages}
+            onCLick={() => setCurrentView("STORAGE")}
+          />
         </div>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <div className="mainGrid">
+          {activeViewTitle}
+          <Chart selectedView={currentView} data={stats} fill="#fff" stroke="#fff" maxDataPoints={10} />
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 };
+
+export const Header: FC = () => {
+  return (
+    <header>
+      <button id="close" onClick={() => window.electron.sendFrameAction("CLOSE")} aria-label="close" />
+      <button id="minimize" onClick={() => window.electron.sendFrameAction("MINIMIZE")} aria-label="minimize" />
+      <button id="maximize" onClick={() => window.electron.sendFrameAction("MAXIMIZE")} aria-label="maximize" />
+    </header>
+  );
+}
+
+type TSelectOptionProps = {
+  title: string;
+  view: TView;
+  subTitle: string;
+  data: number[];
+  onCLick:  () => void;
+}
+
+export const SelectOption: FC<TSelectOptionProps> = (props) => {
+  const { title, subTitle, view } = props;
+
+  return (
+    <button className="selectOption" onClick={props.onCLick}>
+      <div className="selectOptionTitle">
+        <p>{title}</p>
+        <p>{subTitle}</p>
+      </div>
+      <div className="selectOptionChart">
+        <Chart selectedView={view} data={[]} fill="#fff" stroke="#fff" maxDataPoints={10} />
+      </div>
+    </button>
+  );
+};
+
+const useStaticData = () => {
+  const [staticData, setStaticData] = useState<TStaticData | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      setStaticData(await window.electron.getStaticData());
+    })();
+  }, []);
+
+  console.log(staticData);
+
+  return staticData;
+}
 
 export default App;
