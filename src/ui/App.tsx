@@ -83,7 +83,7 @@ type TSelectOptionProps = {
 }
 
 export const SelectOption: FC<TSelectOptionProps> = (props) => {
-  const { title, subTitle, view } = props;
+  const { title, subTitle, view, data } = props;
 
   return (
     <button className="selectOption" onClick={props.onCLick}>
@@ -92,7 +92,7 @@ export const SelectOption: FC<TSelectOptionProps> = (props) => {
         <p>{subTitle}</p>
       </div>
       <div className="selectOptionChart">
-        <Chart selectedView={view} data={[]} fill="#fff" stroke="#fff" maxDataPoints={10} />
+        <Chart selectedView={view} data={data} fill="#fff" stroke="#fff" maxDataPoints={10} />
       </div>
     </button>
   );
